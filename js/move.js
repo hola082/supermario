@@ -40,6 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // lista de champiñones activos
         const mushrooms = [];
+        // monedas activas y contador
+        const coins = [];
+        let coinCount = 0;
+        const hudEl = document.getElementById('hud');
+        let monedasEl = document.getElementById('monedas');
+        if (!monedasEl && hudEl) {
+            monedasEl = document.createElement('div');
+            monedasEl.id = 'monedas';
+            monedasEl.textContent = 'Monedas: 0';
+            hudEl.appendChild(monedasEl);
+        }
+        function updateCoinsUI() { if (monedasEl) monedasEl.textContent = 'Monedas: ' + coinCount; }
 
         // Inicializar bicho (enemigo) para patrulla horizontal
         const bicho = document.getElementById('bicho');
@@ -120,6 +132,23 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             marioRect.right = marioRect.left + marioRect.width;
             marioRect.bottom = marioRect.top + marioRect.height;
+            // Detectar colisiones Mario <-> monedas (colección)
+            if (coins.length > 0) {
+                for (let ci = coins.length - 1; ci >= 0; ci--) {
+                    const c = coins[ci];
+                    if (!c.el) { coins.splice(ci, 1); continue; }
+                    const cr = c.el.getBoundingClientRect();
+                    const overlapCX = Math.min(marioRect.right, cr.right) - Math.max(marioRect.left, cr.left);
+                    const overlapCY = Math.min(marioRect.bottom, cr.bottom) - Math.max(marioRect.top, cr.top);
+                    if (overlapCX > 0 && overlapCY > 0) {
+                        // recoger moneda
+                        try { if (c.el.parentElement) c.el.remove(); } catch (e) {}
+                        coins.splice(ci, 1);
+                        coinCount += 1;
+                        updateCoinsUI();
+                    }
+                }
+            }
             let standingOnSurface = false;
             for (const el of collidables) {
                 const r = el.getBoundingClientRect();
@@ -164,20 +193,18 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const baseY = Math.round(elTop - pantallaRect2.top) - 6; // ligeramente encima
 
                                 if (el.id.startsWith('caja')) {
-                                    // spawn 3 monedas que flotan hacia arriba y desaparecen
-                                    for (let i = 0; i < 3; i++) {
-                                        const coin = document.createElement('div');
-                                        coin.className = 'coin';
-                                        // spread coins horizontally a little
-                                        const offsetX = (i - 1) * 10; // -10,0,10
-                                        coin.style.left = (baseX + offsetX) + 'px';
-                                        coin.style.top = (baseY) + 'px';
-                                        // stagger animation slightly
-                                        coin.style.animationDelay = (i * 80) + 'ms';
-                                        pantalla.appendChild(coin);
-                                        // remove after animation
-                                        coin.addEventListener('animationend', () => coin.remove());
-                                    }
+                                    // spawn 1 moneda que flota hacia arriba y puede recogerse
+                                    const coin = document.createElement('div');
+                                    coin.className = 'coin';
+                                    // posicion central sobre el bloque
+                                    coin.style.left = (baseX) + 'px';
+                                    coin.style.top = (baseY) + 'px';
+                                    // disable CSS animation for predictable bounding rect and control via JS
+                                    coin.style.animation = 'none';
+                                    pantalla.appendChild(coin);
+                                    // add to tracking array for collection detection and JS-based float
+                                    const coinObj = { el: coin, x: baseX, y: baseY, vy: -120, timer: 0, floatDuration: 0.6 };
+                                    coins.push(coinObj);
                                 } else if (el.id.startsWith('ladrillo')) {
                                     // crear champiñón y añadir a la lista de móviles
                                     const mush = document.createElement('div');
@@ -273,34 +300,47 @@ document.addEventListener('DOMContentLoaded', () => {
                             mario.classList.add('hit');
 
                             // Golpe lateral: descontar vidas si no estamos invulnerables
-                            if (!invulnerable) {
-                                lives -= 1;
-                                updateLivesUI();
-                                invulnerable = true;
-                                mario.classList.add('invulnerable');
+                                if (!invulnerable) {
+                                    lives -= 1;
+                                    updateLivesUI();
+                                    invulnerable = true;
+                                    mario.classList.add('invulnerable');
 
-                                if (lives <= 0) {
-                                    // game over
-                                    gameOver = true;
-                                    // mostrar overlay
-                                    const overlay = document.createElement('div');
-                                    overlay.id = 'gameOver';
-                                    overlay.textContent = 'GAME OVER';
-                                    pantalla.appendChild(overlay);
-                                } else {
-                                    // respawn Mario at spawn point
-                                    x = spawnX;
-                                    y = spawnY;
-                                    vx = 0;
-                                    vy = 0;
+                                    if (lives <= 0) {
+                                        // game over
+                                        gameOver = true;
+                                        // mostrar overlay con botón Restart
+                                        const overlay = document.createElement('div');
+                                        overlay.id = 'gameOver';
+                                        // crear contenido interno con botón
+                                        const msg = document.createElement('div');
+                                        msg.textContent = 'GAME OVER';
+                                        msg.style.marginBottom = '12px';
+                                        msg.style.textAlign = 'center';
+                                        const btn = document.createElement('button');
+                                        btn.textContent = 'Restart';
+                                        btn.className = 'restart-button';
+                                        btn.addEventListener('click', () => {
+                                            // Recargar la página para reiniciar el estado limpio
+                                            window.location.reload();
+                                        });
+                                        overlay.appendChild(msg);
+                                        overlay.appendChild(btn);
+                                        pantalla.appendChild(overlay);
+                                    } else {
+                                        // respawn Mario at spawn point
+                                        x = spawnX;
+                                        y = spawnY;
+                                        vx = 0;
+                                        vy = 0;
+                                    }
+
+                                    // quitar invulnerabilidad tras un tiempo
+                                    setTimeout(() => {
+                                        invulnerable = false;
+                                        mario.classList.remove('invulnerable');
+                                    }, 1500);
                                 }
-
-                                // quitar invulnerabilidad tras un tiempo
-                                setTimeout(() => {
-                                    invulnerable = false;
-                                    mario.classList.remove('invulnerable');
-                                }, 1500);
-                            }
 
                             setTimeout(() => mario.classList.remove('hit'), 200);
                         }
@@ -346,6 +386,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (m.x < -100 || m.x > (pantalla ? pantalla.clientWidth + 100 : window.innerWidth + 100)) {
                         m.el.remove();
                         mushrooms.splice(i, 1);
+                    }
+                }
+            }
+
+            // Actualizar monedas (float y mantener hasta que sean recogidas)
+            if (coins.length > 0) {
+                for (let i = coins.length - 1; i >= 0; i--) {
+                    const c = coins[i];
+                    if (!c.el) { coins.splice(i, 1); continue; }
+                    // aplicar física simple: flotar hacia arriba durante floatDuration
+                    if (c.timer < c.floatDuration) {
+                        c.y += c.vy * dt; // vy es negativo para subir
+                        c.timer += dt;
+                        if (c.timer >= c.floatDuration) {
+                            c.vy = 0; // se detiene arriba
+                        }
+                    }
+                    // mantener posición
+                    c.el.style.left = Math.round(c.x) + 'px';
+                    c.el.style.top = Math.round(c.y) + 'px';
+                    // si sale de la pantalla por seguridad, eliminar
+                    if (c.x < -100 || c.x > (pantalla ? pantalla.clientWidth + 100 : window.innerWidth + 100) || c.y < -200) {
+                        try { if (c.el.parentElement) c.el.remove(); } catch (e) {}
+                        coins.splice(i, 1);
                     }
                 }
             }
