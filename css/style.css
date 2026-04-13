@@ -1,0 +1,328 @@
+#pantalla{
+    position: absolute;
+    width: 900px;
+    height: 600px;
+    margin: 0 auto;
+    background-color: #5555ff; /* el color que tu creas apropiado */
+    border: 1px solid black;
+    z-index:-1;
+}
+
+#mario{
+    position:absolute;
+    top:515px;
+    left:300px;
+  width: 25px;
+  height: 35px;
+  z-index:0;
+}
+
+/* sprite container inside #mario - contiene la imagen que volteamos/animamos */
+.sprite{
+  width:100%;
+  height:100%;
+  background-image: url('../img/mario.png');
+  background-size: cover;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* Head pseudo-element on parent: will 'turn' separately from sprite */
+#mario::before{
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f1c27d; /* approximate skin color - adjust if needed */
+  top: 6px;
+  left: 8px;
+}
+
+/* Look right/left: shift/rotate the head pseudo-element */
+#mario.look-right::before{ transform: translateX(3px) rotate(10deg); }
+#mario.look-left::before{ transform: translateX(-3px) rotate(-10deg); }
+
+/* When the sprite is flipped (mirrored), the pseudo-element will also flip visually,
+   so we invert the head offsets so it still appears looking in the movement direction */
+/* empty placeholder removed */
+#suelo{
+    position:absolute;
+    top:550px;
+    left:0px;
+    width: 100%;
+    height: 50px;
+    background-image: url('../img/suelo.png');
+    z-index: 1;
+}
+
+#nube{
+    position: absolute;
+  top: 22px;
+  left: 18px;
+  width: 120px;
+  height: 50px;
+  background-image: url('../img/nube.png');
+  z-index: 1;
+}
+#nube_pequeña{
+    position:absolute;
+    top: -19px;
+    left: 848px;
+    width: 79px;
+    height: 60px;
+    background-image: url('../img/nubepeque.png');
+    z-index:1;
+}
+#bicho{
+    position: absolute;
+  top: 516px;
+  left: 741px;
+  width: 36px;
+  height: 39px;
+  background-image: url('../img/bicho.png');
+  z-index: 1;
+}
+
+
+#caja1{
+    position: absolute;
+  top: 358px;
+  left: 440px;
+  width: 27px;
+  height: 32px;
+    background-image: url('../img/caja.png');
+}
+#caja2{
+    position: absolute;
+  top: 358px;
+  left: 784px;
+  width: 28px;
+  height: 31px;
+    background-image: url('../img/caja.png');
+}
+#caja3{
+    position: absolute;
+  top: 358px;
+  left: 840px;
+  width: 28px;
+  height: 33px;
+    background-image: url('../img/caja.png');
+}
+#caja4{
+    position: absolute;
+  top: 234px;
+  left: 816px;
+  width: 28px;
+  height: 32px;
+    background-image: url('../img/caja.png');
+}
+#caja5{
+    position: absolute;
+  top: 300px;
+  left: 520px;
+  width: 28px;
+  height: 32px;
+    background-image: url('../img/caja.png');
+}
+#caja6{
+    position: absolute;
+  top: 420px;
+  left: 620px;
+  width: 28px;
+  height: 32px;
+    background-image: url('../img/caja.png');
+}
+
+/* nuevas cajas adicionales */
+#caja7{ position: absolute; top: 420px; left: 240px; width: 28px; height: 32px; background-image: url('../img/caja.png'); }
+#caja8{ position: absolute; top: 420px; left: 280px; width: 28px; height: 32px; background-image: url('../img/caja.png'); }
+#caja9{ position: absolute; top: 420px; left: 320px; width: 28px; height: 32px; background-image: url('../img/caja.png'); }
+#caja10{ position: absolute; top: 420px; left: 360px; width: 28px; height: 32px; background-image: url('../img/caja.png'); }
+
+/* Nuevos ladrillos más altos */
+#ladrillo4{
+    position: absolute;
+  top: 320px; /* un poco más alto que los demás ladrillos */
+  left: 600px;
+  width: 28px;
+  height: 32px;
+    background-image: url('../img/ladrillo.png');
+}
+#ladrillo5{
+    position: absolute;
+  top: 320px;
+  left: 660px;
+  width: 28px;
+  height: 32px;
+    background-image: url('../img/ladrillo.png');
+}
+#ladrillo1{
+    position: absolute;
+  top: 358px;
+  left: 812px;
+  width: 28px;
+  height: 32px;
+    background-image: url('../img/ladrillo.png');
+}
+#ladrillo2{
+    position: absolute;
+  top: 358px;
+  left: 868px;
+  width: 28px;
+  height: 32px;
+    background-image: url('../img/ladrillo.png');
+}
+#ladrillo3{
+    position: absolute;
+    top: 358px;
+    left: 755px;
+    width: 29px;
+    height: 32px;
+    background-image: url('../img/ladrillo.png');
+}
+#cartel{
+    position: absolute;
+  top: 56px;
+  left: 300px;
+  width: 267px;
+  height: 160px;
+    background-image: url('../img/cartel.png');
+}
+#montana1{
+    position: absolute;
+  top: 365px;
+  left: -148px;
+  width: 395px;
+  height: 200px;
+    background-image: url('../img/montana.png');
+}
+#montana2{
+    position: absolute;
+  top: 467px;
+  left: 414px;
+  width: 280px;
+  height: 83px;
+    background-image: url('../img/montana.png');
+}
+#nube_pequeña2{
+    position: absolute;
+  top: 381px;
+  left: 192px;
+  width: 74px;
+  height: 60px;
+  background-image: url('../img/nubepeque.png');
+  z-index: 0;
+}
+
+#planta1{
+    position: absolute;
+  top: 510px;
+  left: 406px;
+  width: 117px;
+  height: 48px;
+    background-image: url('../img/planta.png');
+}
+#planta2{
+    position: absolute;
+  top: 511px;
+  left: 850px;
+  width: 50px;
+  height: 49px;
+    background-image: url('../img/planta.png');
+}
+
+/* Animaciones y clases para Mario */
+#mario {
+    transform-origin: center;
+}
+
+/* Bob suave cuando está caminando */
+@keyframes bob {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+/* Efecto de caminar (bob) aplicado al contenedor para mover todo junto */
+#mario.walking {
+  animation: bob 0.35s linear infinite;
+}
+
+/* Voltear solo la imagen/sprite al mirar a la izquierda */
+.sprite.facing-left {
+  transform: scaleX(-1);
+}
+
+/* Clase para indicar que Mario ha recibido daño (efecto visual simple) */
+#mario.hit {
+  transition: filter 120ms;
+  filter: hue-rotate(200deg) saturate(1.5);
+}
+
+/* Si tienes una hoja de sprites horizontal para Mario, la siguiente animación
+   desplaza el background para simular pasos. Si no, la propiedad no hará efecto.
+   Ajusta `steps(4)` y el tamaño de fondo según tu sprite. */
+@keyframes mario-steps {
+  from { background-position: 0 0; }
+  to   { background-position: -100% 0; }
+}
+
+/* Animación de pasos (background-position) aplicada al .sprite si tienes una hoja de sprites */
+.sprite.walking {
+  animation: mario-steps 0.5s steps(4) infinite;
+}
+
+/* Bicho: pequeño movimiento de patas similar */
+@keyframes bicho-steps {
+  from { background-position: 0 0; }
+  to   { background-position: -100% 0; }
+}
+#bicho.walking {
+  animation: bicho-steps 0.5s steps(4) infinite;
+}
+
+/* Champiñón que sale de las cajas */
+.mushroom{
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-image: url('../img/mushroom.png');
+  background-size: cover;
+  z-index: 2;
+}
+
+/* Moneda que sale de las cajas: animación flotante y desaparición */
+.coin{
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-image: url('../img/moneda.png');
+  background-size: cover;
+  z-index: 20;
+  pointer-events: none;
+  animation: coin-up 700ms ease-out forwards;
+}
+@keyframes coin-up{
+  0% { transform: translateY(0); opacity: 1; }
+  60% { transform: translateY(-36px); opacity: 1; }
+  100% { transform: translateY(-56px); opacity: 0; }
+}
+
+/* HUD de vidas */
+#hud{ position: absolute; top: 8px; left: 8px; z-index: 10; }
+#vidas{ background: rgba(0,0,0,0.45); color: white; padding: 6px 8px; border-radius: 6px; font-family: sans-serif; font-weight: bold; }
+
+/* Clase temporal de invulnerabilidad (flicker) */
+#mario.invulnerable{ animation: flicker 0.12s steps(2) infinite; }
+@keyframes flicker { 0% { opacity: 1 } 50% { opacity: 0.2 } 100% { opacity: 1 } }
+
+/* Game over overlay */
+#gameOver {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.6);
+  color: white; font-size: 36px; font-weight: bold; z-index: 50;
+}
