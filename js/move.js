@@ -203,7 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                     coin.style.animation = 'none';
                                     pantalla.appendChild(coin);
                                     // add to tracking array for collection detection and JS-based float
-                                    const coinObj = { el: coin, x: baseX, y: baseY, vy: -120, timer: 0, floatDuration: 0.6 };
+                                    // mantener la moneda estática (sin flotar hacia arriba)
+                                    const coinObj = { el: coin, x: baseX, y: baseY, vy: 0, timer: 0, floatDuration: 0 };
                                     coins.push(coinObj);
                                 } else if (el.id.startsWith('ladrillo')) {
                                     // crear champiñón y añadir a la lista de móviles
